@@ -23,14 +23,47 @@ namespace AutoClicker
         {
             InitializeComponent();
         }
-
+        Thread space;
+        Thread numOne;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < 5; i++)
+            if (StartStopTextBox.Text == "Off")
+            {
+                StartStopTextBox.Text = "On";
+                space = new Thread(autoSpaceClick);
+                space.Start();
+                numOne = new Thread(autoNumOneClick);
+                numOne.Start();
+            }
+            else
+            {
+                StartStopTextBox.Text = "Off";
+                space.Abort();
+                numOne.Abort();
+            }
+        }
+        public void autoSpaceClick()
+        {
+            for (; ; )
+            {
+                SendKeys.SendWait("1");
+                Thread.Sleep(4000);
+            }
+        }
+
+        public void autoNumOneClick()
+        {
+            for (; ; )
             {
                 SendKeys.SendWait(" ");
-                Thread.Sleep(2000);
+                Thread.Sleep(1000);
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            space.Abort();
+            numOne.Abort();
         }
     }
 }
